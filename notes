@@ -1,0 +1,23 @@
+# Generate a private key
+openssl genpkey -algorithm RSA -out server.key
+
+# Generate a certificate signing request (CSR)
+openssl req -new -key server.key -out server.csr
+
+# Generate a self-signed certificate valid for 365 days
+openssl x509 -req -in server.csr -signkey server.key -out server.crt -days 365
+
+
+Frame 204: 187 bytes on wire (1496 bits), 187 bytes captured (1496 bits) on interface lo, id 0
+Ethernet II, Src: 00:00:00_00:00:00 (00:00:00:00:00:00), Dst: 00:00:00_00:00:00 (00:00:00:00:00:00)
+Internet Protocol Version 4, Src: 127.0.0.1, Dst: 127.0.0.1
+Transmission Control Protocol, Src Port: 57942, Dst Port: 80, Seq: 1, Ack: 1, Len: 121
+Hypertext Transfer Protocol
+    HEAD /Fight.Club.1999.Bluray.720p.Farsi.Dubbed.mkv HTTP/1.1\r\n
+    Host: localhost.com\r\n
+    User-Agent: curl/8.4.0\r\n
+    Accept: */*\r\n
+    \r\n
+    [Full request URI: http://localhost.com/Fight.Club.1999.Bluray.720p.Farsi.Dubbed.mkv]
+    [HTTP request 1/1]
+    [Response in frame: 206]

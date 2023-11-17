@@ -1,0 +1,12 @@
+version: '3'
+
+services:
+  nginx:
+    image: nginx:latest
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./vol/:/usr/share/nginx/html/
+      - ./nginx-file-server.conf:/etc/nginx/conf.d/nginx-file-server.conf
+      - ./vol/ssl/:/etc/nginx/ssl/
