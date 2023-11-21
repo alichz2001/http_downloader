@@ -21,3 +21,5 @@ Hypertext Transfer Protocol
     [Full request URI: http://localhost.com/Fight.Club.1999.Bluray.720p.Farsi.Dubbed.mkv]
     [HTTP request 1/1]
     [Response in frame: 206]
+
+http_downloader <link> -p 3

@@ -15,15 +15,22 @@ type PartDownloader struct {
 	toByte      int64
 	currentByte int64
 
+	readedBytes int64
+	writedBytes int64
+
 	request *http.HTTP
 
-	bufferSize int
+	bufferSize int64
 	file       *os.File
+}
+
+func (pd *PartDownloader) getBytesCount() int64 {
+	return pd.toByte - pd.fromByte + 1
 }
 
 func (pd *PartDownloader) Run() {
 
-	file, err := os.OpenFile(pd.getFileName(), os.O_WRONLY|os.O_CREATE|os.O_TRUNC, 0666)
+	file, err := os.OpenFile(pd.getFileName(), os.O_RDWR|os.O_CREATE|os.O_TRUNC, 0666)
 	if err != nil {
 		fmt.Println("Error opening file:", err)
 		return
@@ -36,13 +43,24 @@ func (pd *PartDownloader) Run() {
 	p := make([]byte, pd.bufferSize)
 
 	bytesCount := pd.toByte - pd.fromByte
-	for i := int64(0); i < bytesCount; i += int64(pd.bufferSize) {
+	for i := int64(0); i < bytesCount-pd.bufferSize; i += pd.bufferSize {
 		//TODO this approche make padding to end of file. append some empty bytes!
 		//TODO handle error and maybe save state for failure
-		body.Read(p)
+		n, _ := body.Read(p)
+		pd.readedBytes += int64(n)
+
 		//log.Print(n)
-		pd.file.Write(p)
+		m, _ := pd.file.Write(p)
+		pd.writedBytes += int64(m)
 		//log.Print(m)
+	}
+	remainBytes := pd.getBytesCount() - pd.readedBytes
+	if remainBytes > 0 {
+		c := make([]byte, remainBytes)
+		n, _ := body.Read(c)
+		pd.readedBytes += int64(n)
+		m, _ := pd.file.Write(c)
+		pd.writedBytes += int64(m)
 	}
 }
 
